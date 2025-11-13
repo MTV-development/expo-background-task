@@ -5,12 +5,6 @@
     "modules": ["BackgroundTaskModule"]
   },
   "android": {
-    "modules": ["expo.modules.backgroundtask.BackgroundTaskModule"],
-    "publication": {
-      "groupId": "host.exp.exponent",
-      "artifactId": "expo.modules.backgroundtask",
-      "version": "1.0.8",
-      "repository": "local-maven-repo"
-    }
+    "modules": ["expo.modules.backgroundtask.BackgroundTaskModule"]
   }
 }
