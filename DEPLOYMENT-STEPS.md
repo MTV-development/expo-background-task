@@ -8,8 +8,10 @@ The forked package is ready in: `C:\git\expo-background-task-custom\`
 - ✅ Precompiled AAR removed
 - ✅ Source code verified (NetworkType.NOT_REQUIRED at line 94)
 - ✅ package.json updated with new name and version
-- ✅ Git repository initialized with 2 commits
+- ✅ Git repository initialized and pushed to GitHub
 - ✅ README-FORK.md created explaining the fork
+- ✅ Prepare script removed for Windows compatibility
+- ✅ Successfully installed in app from GitHub
 
 ## Next Steps (Manual Actions Required)
 
@@ -40,7 +42,7 @@ git push -u origin main
 
 ### Step 3: Update Your App to Use the Fork
 
-In your app's directory (`C:\git\self-v4\`):
+In your app's directory (e.g., `/path/to/your/app`):
 
 ```bash
 # Remove old package and patches
@@ -77,15 +79,15 @@ cd android && ./gradlew.bat clean && cd ..
 npm run local:build-release
 
 # Install on device
-adb uninstall com.feelgoodcompany.feelgood
-adb install -r "Downloads/4.0.168 (31168) chg-to-background-task.apk"
+adb uninstall <your.package.name>
+adb install -r "path/to/your-app.apk"
 
 # Start app
-adb shell am start -n com.feelgoodcompany.feelgood/.MainActivity
+adb shell am start -n <your.package.name>/.MainActivity
 
 # Wait 5 seconds, then check WorkManager constraints
 sleep 5
-adb shell dumpsys jobscheduler | grep -A40 "feelgood.*SystemJobService"
+adb shell dumpsys jobscheduler | grep -A40 "<your-package>.*SystemJobService"
 ```
 
 ### Step 6: Verify Success
@@ -103,7 +105,7 @@ Required constraints: TIMING_DELAY [0x80000000]
 If you want to test before pushing to GitHub:
 
 ```bash
-cd /c/git/self-v4
+cd /path/to/your/app
 
 # Install from local directory
 npm install --save file:../expo-background-task-custom
