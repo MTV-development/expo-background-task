@@ -1,6 +1,6 @@
 import { ConfigPlugin, createRunOncePlugin, withInfoPlist } from 'expo/config-plugins';
 
-const pkg = require('expo-background-task/package.json');
+const pkg = require('@mtv-development/expo-background-task/package.json');
 
 const withBackgroundTask: ConfigPlugin = (config) => {
   return withInfoPlist(config, (config) => {
