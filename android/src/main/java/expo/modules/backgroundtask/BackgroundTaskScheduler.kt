@@ -193,27 +193,48 @@ object BackgroundTaskScheduler {
     val taskService = TaskServiceProviderHelper.getTaskServiceImpl(context)
       ?: throw MissingTaskServiceException()
 
-    Log.d(TAG, "runTasks: $appScopeKey")
+    // ENHANCED LOGGING: Entry point with timestamp
+    Log.i(TAG, "════════════════════════════════════════════════════════════")
+    Log.i(TAG, "runTasks: ENTERED at ${System.currentTimeMillis()}")
+    Log.i(TAG, "runTasks: appScopeKey=$appScopeKey")
+    Log.i(TAG, "runTasks: inForeground=$inForeground")
+    Log.i(TAG, "runTasks: intervalMinutes=$intervalMinutes")
+    Log.i(TAG, "════════════════════════════════════════════════════════════")
 
     // Get all task consumers
     val consumers = taskService.getTaskConsumers(appScopeKey)
     Log.d(TAG, "runTasks: number of consumers ${consumers.size}")
 
     if (consumers.isEmpty()) {
+      Log.w(TAG, "runTasks: No consumers found - exiting")
       return
     }
+
+    // ENHANCED LOGGING: Foreground check
+    Log.i(TAG, "runTasks: Checking foreground state...")
+    Log.i(TAG, "runTasks: inForeground variable = $inForeground")
 
     // Make sure we're in the background before running a task
     if (inForeground) {
       // Schedule task in an hour (or at least minimumInterval) - the app is foregrounded and
       // we don't want to run anything to avoid performance issues.
-      Log.d(TAG, "runTasks: App is in the foreground")
+      Log.w(TAG, "════════════════════════════════════════════════════════════")
+      Log.w(TAG, "runTasks: SKIPPING EXECUTION - App is in the foreground")
+      Log.w(TAG, "runTasks: This means the task will NOT run JavaScript code")
+      Log.w(TAG, "runTasks: Rescheduling for later...")
+      Log.w(TAG, "════════════════════════════════════════════════════════════")
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         scheduleWorker(context, appScopeKey, false, 60L.coerceAtMost(intervalMinutes))
         Log.d(TAG, "runTasks: Scheduled new worker in $intervalMinutes minutes")
       }
       return
     }
+
+    // ENHANCED LOGGING: Proceeding with execution
+    Log.i(TAG, "════════════════════════════════════════════════════════════")
+    Log.i(TAG, "runTasks: PROCEEDING - App is in background")
+    Log.i(TAG, "runTasks: About to execute ${consumers.filterIsInstance<BackgroundTaskConsumer>().size} task(s)")
+    Log.i(TAG, "════════════════════════════════════════════════════════════")
 
     val tasks = consumers.filterIsInstance<BackgroundTaskConsumer>()
       .map { bgTaskConsumer ->
