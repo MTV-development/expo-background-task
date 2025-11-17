@@ -269,7 +269,7 @@ object BackgroundTaskScheduler {
 
     return try {
       val workInfos = workManager.getWorkInfosForUniqueWork(WORKER_IDENTIFIER).await()
-      return workInfos.firstOrNull()
+      workInfos.firstOrNull()
     } catch (e: Exception) {
       Log.d(TAG, "Calling getWorkInfosForUniqueWork failed with error " + e.message)
       null
